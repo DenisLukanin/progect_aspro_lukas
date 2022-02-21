@@ -1,0 +1,11 @@
+*{
+    font-family: "Cormorant Garamond" , sans-serif;
+    font-size: 25px;
+}
+.container{
+    max-width: 1320px;
+    padding: 0 10px;
+    margin: 0 auto;
+}
+
+
