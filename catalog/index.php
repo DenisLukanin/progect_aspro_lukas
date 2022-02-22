@@ -2,10 +2,11 @@
 include "../bootstrap.php";
 
 
-Layout::set_static("general/reset.css");
+
 Layout::get_instance();
 Layout::set_static("catalog.css");
 Layout::set_static("catalog.css");
+Layout::set_static("general/reset.css");
 Layout::get_static();
 
 $content = [

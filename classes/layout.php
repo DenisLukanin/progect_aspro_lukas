@@ -11,9 +11,10 @@ class Layout
             "js",
         ],
     ];
-    
+
     private static $list_script = []; 
     private static $list_style = [];
+    private static $fonts;
 
 
     private static $static_relative_path = "/static/";
@@ -75,7 +76,14 @@ class Layout
             }
     }
     static function get_static_style(){
-        foreach(self::$list_style as $link){
+        if (self::$list_style['reset.css']){
+            echo self::$list_style['reset.css'];
+        }
+        if (self::$fonts){
+            echo self::$fonts;
+        }
+        foreach(self::$list_style as $name => $link){
+            if ($name == "reset.css") continue;
             echo $link;
         };
     }
@@ -120,7 +128,7 @@ class Layout
     // подключение шрифта google fonts***********
     private static function set_fonts(string $font_name){
         $font_name = str_replace(" ", "+", $font_name);
-        echo '
+        self::$fonts = '
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family='.$font_name.':wght@400;600&display=swap" rel="stylesheet">
