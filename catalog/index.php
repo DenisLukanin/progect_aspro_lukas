@@ -3,11 +3,12 @@ include "../bootstrap.php";
 
 
 
-Layout::get_instance();
-Layout::set_static("catalog.css");
-Layout::set_static("catalog.css");
-Layout::set_static("general/reset.css");
-Layout::get_static();
+$layout = Layout::get_instance();
+$layout->set_static("catalog.css");
+$layout->set_static("catalog.css");
+$layout->set_static("general/reset.css");
+$layout->get_static();
+
 
 $content = [
     [

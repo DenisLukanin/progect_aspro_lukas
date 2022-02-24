@@ -8,7 +8,8 @@ spl_autoload_register(function($path){
         include $class_path;
     }
 }
-)
+);
+
 
 
 

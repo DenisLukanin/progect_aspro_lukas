@@ -4,7 +4,6 @@ class Dbg {
         echo "<pre>";
         var_dump($value);
         echo "</pre>";
-        exit;
     }
 }
 ?>

@@ -1,6 +1,10 @@
+:root{
+    --font_size: 25px;
+}
+
 *{
     font-family: "Cormorant Garamond" , sans-serif;
-    font-size: 25px;
+    font-size: var(--font_size);
 }
 .container{
     max-width: 1320px;
