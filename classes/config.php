@@ -10,7 +10,6 @@ class Config{
 
         if(file_exists($config_path)){
             if (in_array($file_name, array_keys(self::$config_project))){
-                // echo "cache";
                 return self::$config_project[$file_name][$key_config] ;
             } else {
                 $class_config = include $config_path;
@@ -18,7 +17,7 @@ class Config{
                 return $class_config[$key_config] ;
             }
         }
-        echo "такого файла тут нет";
+        echo NULL;
 
         
     }
