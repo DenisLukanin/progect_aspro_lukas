@@ -94,11 +94,17 @@ class Layout
 
     // подключение шрифта google fonts***********
     private static function set_fonts(string $font_name){
-        $font_name_plas = str_replace(" ", "+", $font_name);
+        $font_name_plas = str_replace(" ", "+", trim($font_name));
         self::$list_static["fonts"][$font_name] = '
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family='.$font_name_plas.':wght@400;600&display=swap" rel="stylesheet">
+        
+        <style>
+            :root{
+                --font: "'.$font_name.'" , sans-serif;
+            }
+        </style>
         ';
     }
 

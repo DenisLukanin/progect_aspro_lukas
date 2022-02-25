@@ -3,7 +3,7 @@
 }
 
 *{
-    font-family: "Cormorant Garamond" , sans-serif;
+    font-family: var(--font);
     font-size: var(--font_size);
 }
 .container{
