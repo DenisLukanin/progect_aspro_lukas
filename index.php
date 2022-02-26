@@ -3,12 +3,16 @@
 
 include "./bootstrap.php";
 $layout = Layout::get_instance();
-$layout->set_static("general/reset.css");
-$layout->set_static("general/bootstrap.css");
 $layout->get_static();
 
 
-
+$sql = Db::get_instance();
+    Dbg::dbg_print($sql);
+    $sql->create_table("test3", [
+        "id" => ["integer(10)", "auto_increment", "primary key"],
+        "name" => ["varchar(30)"],
+        "age" => ["integer(2)"]
+    ]);
 
 
 
