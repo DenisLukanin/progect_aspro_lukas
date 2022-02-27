@@ -25,7 +25,7 @@ class Db {
     // создание таблицы*******
     public function create_table(string $name, array $columns = [] ){
         $reqest = "create table $name (".$this->create_columns_in_table($columns).");";
-        echo $reqest;
+        // echo $reqest;
         $this->conection->exec($reqest);
     }
 
@@ -57,13 +57,12 @@ class Db {
     public function insert(string $name, array $arr){
         $keys = implode(", ", array_keys($arr));
         $keys_placeholder = implode(", ", array_map(fn ($item) => ":".$item, array_keys($arr)) );
-        echo $keys;
+        
         $stm = $this->conection->prepare("insert into $name ($keys) value ($keys_placeholder)");
         foreach ($arr as $name => $value){
             $stm->bindValue($name , $value);
         }
-        $stm->execute();
-        
+        $stm->execute();;
         return $this->conection->lastInsertId();
     }
 
