@@ -11,24 +11,18 @@ class Config{
         if(file_exists($config_path)){
             
 
-            if (in_array($file_name, array_keys(self::$config_project))){
-                if ($key_config == ""){
-                    return self::$config_project[$file_name];
-                } else {
-                    return self::$config_project[$file_name][$key_config] ;
-                }
-                
-            } else {
+            if (!in_array($file_name, array_keys(self::$config_project))){
                 $class_config = include $config_path;
                 self::$config_project[$file_name] = $class_config;
-                if ($key_config == ""){
-                    return $class_config;
-                } else {
-                    return $class_config[$key_config] ;
-                }
-
-                return $class_config[$key_config] ;
             }
+
+            if ($key_config == ""){
+                return self::$config_project[$file_name];
+            } else {
+                return self::$config_project[$file_name][$key_config] ;
+            }
+                
+             
         }
         echo NULL;
 

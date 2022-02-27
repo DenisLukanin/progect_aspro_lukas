@@ -34,7 +34,7 @@ class Layout
     // Логика создания экземпляра класса*******
     private function __construct(){
         $this->set_static("general/reset.css");
-        self::set_fonts(Config::get_config('layout', 'font'));
+        self::set_fonts(Config::get_config('layout', 'font') ?? 'Cormorant Garamond');
         $this->set_static("general/bootstrap.css");
     }
 

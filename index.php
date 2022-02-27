@@ -7,13 +7,11 @@ $layout->get_static();
 
 
 $sql = Db::get_instance();
-    Dbg::dbg_print($sql);
     $sql->create_table("test3", [
         "id" => ["integer(10)", "auto_increment", "primary key"],
         "name" => ["varchar(30)"],
         "age" => ["integer(2)"]
     ]);
-
 
 
 

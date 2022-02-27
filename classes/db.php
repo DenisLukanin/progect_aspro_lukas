@@ -8,7 +8,6 @@ class Db {
     private function __construct(){
         $this->connect(Config::get_config("db"));
     }
-
     public static function get_instance(): Db {
         if (self::$instance === NULL){
 
@@ -16,12 +15,14 @@ class Db {
         }
         return self::$instance;
     }
-
+    // создание соединения*************
     private function connect($config_db){
         $this->conection = new PDO("mysql:host=".$config_db["host"].";dbname=".$config_db["name"], $config_db["user"], $config_db["password"]);
     }
 
 
+
+    // создание таблицы*******
     public function create_table(string $name, array $columns = [] ){
         $reqest = "create table $name (".$this->create_columns_in_table($columns).");";
         echo $reqest;
@@ -36,6 +37,37 @@ class Db {
         }
         return substr($columns_request, 0, -2);
     }
+
+
+    
+
+
+    // проверка существования талицы*********************
+    public function table_exist($table_name): bool {
+        if($this->conection->exec("select * from $table_name") === false){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+
+    // запись в таблицу****************
+    public function insert(string $name, array $arr){
+        $keys = implode(", ", array_keys($arr));
+        $keys_placeholder = implode(", ", array_map(fn ($item) => ":".$item, array_keys($arr)) );
+        echo $keys;
+        $stm = $this->conection->prepare("insert into $name ($keys) value ($keys_placeholder)");
+        foreach ($arr as $name => $value){
+            $stm->bindValue($name , $value);
+        }
+        $stm->execute();
+        
+        return $this->conection->lastInsertId();
+    }
+
+
 
 
 
