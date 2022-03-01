@@ -3,6 +3,17 @@
 class Db {
     private $conection;
     private static $instance;
+    const T_INT = "INT";
+    const T_VARCHAR = "VARCHAR";
+    const T_TEXT = "TEXT";
+    const T_DATE = "DATE";
+    const A_I = "AUTO_INCREMENT";
+    const P_KEY = "PRIMARY KEY";
+    const NULL_DEFAULT = "NULL";
+    const NOT_NULL = "NOT NULL";
+    static function DEFAULT_VALUE($value){
+        return "DEFAULT '$value'";
+    }
     
 
     private function __construct(){
@@ -24,12 +35,12 @@ class Db {
 
     // создание таблицы*******
     public function create_table(string $name, array $columns = [] ){
-        $reqest = "create table $name (".$this->create_columns_in_table($columns).");";
-        // echo $reqest;
+        $reqest = "create table $name (".$this->create_columns($columns).");";
+        echo $reqest;
         $this->conection->exec($reqest);
     }
 
-    public function create_columns_in_table(array $columns): string{
+    public function create_columns(array $columns): string{
         $columns_request = "";
         $columns = array_map(fn ($item) => implode(" " , $item) , $columns);
         foreach ($columns as $name => $value){
@@ -67,7 +78,12 @@ class Db {
     }
 
 
+    
 
+    // получение данных таблицы***********
+    public function select(string $name, array $arr){
+        
+    }
 
 
 
