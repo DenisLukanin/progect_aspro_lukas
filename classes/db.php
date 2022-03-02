@@ -81,7 +81,23 @@ class Db {
     
 
     // получение данных таблицы***********
-    public function select(string $name, array $arr){
+    public function select(string $name, array $arr = []){
+        $request = "SELECT * FROM $name ";
+        if (!$arr){
+            echo "ok";
+            $stm = $this->conection->query($request);
+            return $stm->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            if ($arr["where"]){
+                $request .= " WHERE ". implode(" ", $arr["where"]);
+            }
+            if ($arr["limit"]){
+                $request .= " LIMIT ".$arr["limit"];
+            }
+            // echo $request;
+            $stm = $this->conection->query($request);
+            return $stm->fetchAll(PDO::FETCH_ASSOC);
+        }
         
     }
 
