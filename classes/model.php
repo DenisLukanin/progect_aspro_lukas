@@ -105,8 +105,14 @@ class Model {
     }
 
 
-    public function create_table($table_name, $table_columns ){
-        // Db::create_table($stable_name, $table_columns);
+
+
+    // создание таблицы
+    public function create_table(array $new_columns = []){
+        if (!$new_columns) {
+            $this->table_columns = array_merge($this->table_columns, $new_columns);
+        }
+        Db::create_table($this->table_name, $this->table_columns);
     }
 
 

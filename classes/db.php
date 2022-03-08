@@ -2,7 +2,7 @@
 
 class Db {
     public $conection;
-    private $columns_id = "id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY";
+    // private $columns_id = "id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY";
     private static $instance;
     const NOT_ID = false;
     static function T_INT($count = 10){
@@ -57,7 +57,7 @@ class Db {
 
     public function create_columns(array $columns, bool $id): string{
         $columns_request = [];
-        if ($id) $columns_request[] = $this->columns_id;
+        // if ($id) $columns_request[] = $this->columns_id;
         $columns = array_map(fn ($item) => implode(" " , $item) , $columns);
         foreach ($columns as $name => $value){
             $columns_request[] = $name." ".$value;
