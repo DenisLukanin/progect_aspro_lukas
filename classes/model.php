@@ -53,12 +53,13 @@ class Model {
     function test_prop(){
         return $this->properties;
     }
+    
     // показывает значение поля
     function __get($name){
         // aa($name) ;
         if (in_array("$name", array_keys($this->properties))) return  $this->properties[$name];
-        if (in_array("$name", array_keys($this->table_columns))) {
-            $this->properties[$name] = $this->table_columns[$name];
+        if (in_array("$name", array_keys($this->column))) {
+            $this->properties[$name] = $this->column[$name];
             return  $this->properties[$name];
 
         }
@@ -69,9 +70,9 @@ class Model {
 
     // устанавливает новое поле 
     function __set($name, $value){
-        if (in_array($name, array_keys($this->table_columns))) {
-            $this->properties[$name] = $this->table_columns[$name];
-            echo "значение свойства уже есть в table_columns <br>";
+        if (in_array($name, array_keys($this->column))) {
+            $this->properties[$name] = $this->column[$name];
+            echo "значение свойства уже есть в column <br>";
         } else {
             $this->properties[$name] = $value;
             echo "значение свойства записано в properties <br>";
@@ -108,12 +109,12 @@ class Model {
 
 
     // создание таблицы
-    public function create_table(array $new_columns = []){
-        if (!$new_columns) {
-            $this->table_columns = array_merge($this->table_columns, $new_columns);
-        }
-        Db::create_table($this->table_name, $this->table_columns);
-    }
+    // public function create_table(array $new_columns = []){
+    //     if (!$new_columns) {
+    //         $this->table_columns = array_merge($this->table_columns, $new_columns);
+    //     }
+    //     Db::create_table($this->table_name, $this->table_columns);
+    // }
 
 
 
