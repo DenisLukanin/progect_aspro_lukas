@@ -13,16 +13,17 @@ $sql = Db::get_instance();
 //     "age" => [Db::T_INT."(2)"]
 // ]);
 // aa($sql->table_exist("test5"));
-aa($sql->insert("test5",[
-    "age" => "27",
-]));
+// aa($sql->insert("test5",[
+//     "age" => "27",
+// ]));
 
-$sql->select("test5", [
-    "where" => [
-        "id" => "2",
-    ],
-    "limit" => "5"
-]);
+// $sql->select("test5", [
+//     "where" => [
+//         "id" => "2",
+//     ],
+//     "limit" => "5"
+    
+// ]);
 
 
 
