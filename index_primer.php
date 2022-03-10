@@ -81,9 +81,9 @@ class Model{
     function __construct($name){
 
         function check_table($name){  // ??? не совсем понимаю как его потом вызывать если он в конструкторе ??? где кешировать
-            if (in_array($name, array_keys( Db::cashe_table ))) {   // проверка инициализирована ли уже таблица
+            // if (in_array($name, array_keys( Db::cashe_table ))) {   // проверка инициализирована ли уже таблица
 
-            };   
+            // };   
         }
 
 
