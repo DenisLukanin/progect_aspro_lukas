@@ -1,15 +1,15 @@
 <?php
-class Nodel{
+class Model{
 
-    private static $table_exist = []; 
-    private static $loader = [];
-    private $table_elem;
-    private $db_object;
+    protected static $table_exist = []; 
+    protected static $loader = [];
+    protected $table_elem;
+    protected $db_object;
 
-    private $table_name = "nodel";
+    protected $table_name = "nodel";
     
     
-    private $column = [
+    protected $column = [
         "id" => [
             "INT(11)",
             Db::NOT_NULL,
@@ -30,22 +30,23 @@ class Nodel{
 
     function __construct($id = null){
         $this->db_object = Db::get_instance();
-        if (!in_array($this->table_name, array_keys(Nodel::$table_exist))){
-            
+        // aa(Model::$table_exist);
+        if (!in_array($this->table_name, array_keys(Model::$table_exist))){
+            // echo "создание";
             if (!$this->check_table()){
                 $this->create_table();
-                Nodel::$table_exist[$this->table_name] = "exist";
+                Model::$table_exist[$this->table_name] = "exist";
             }   
         }
-
-        // if (in_array($id, Nodel::$loader)) {
+        if($id) {
+        // if (in_array($id, Model::$loader)) {
             $this->table_elem[$id] = $this->select_elem($id);
             aa($this->table_elem[$id]);
         // };
-
+        }
     }
 
-    private function select_elem($id){
+    protected function select_elem($id){
         $request = [
             "where" => [
                 "id = $id",
@@ -63,7 +64,7 @@ class Nodel{
 
 
     function save(){
-        if ($this->id){
+        if ($this->table_elem){
 
 
 
@@ -72,7 +73,7 @@ class Nodel{
             // aa($this->properties);
 
             $result = $this->db_object->insert($this->table_name, $this->properties);
-            Nodel::$loader[] = $result;
+            Model::$loader[] = $result;
 
             // aa($result);
         }
@@ -92,7 +93,7 @@ class Nodel{
     }
 
     // добавление свойств в properties
-    private $properties = [
+    protected $properties = [
     ];
     function test_prop(){
         return $this->properties;

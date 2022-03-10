@@ -143,6 +143,25 @@ class Db {
     }
 
 
+    // обновление записи в таблице
+    public function update($table_name, $id, array $new_value){
+        $request = "
+            UPDATE $table_name 
+            SET ".$this->set_values($new_value)." 
+            WHERE id = $id
+        ";
+        $state = $this->conection->prepare($request);
+        return $state->execute();
+    }
+    private function set_values(array $values): string{
+        $result = [];
+        foreach ($values as $column => $value){
+            $result[] = "$column = '$value'";
+        }
+        return implode(", " , $result);
+    }
+
+
 
     // Получение информации о полях в таблице
     function get_field($table_name){

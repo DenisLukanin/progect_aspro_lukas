@@ -5,9 +5,18 @@ include "./bootstrap.php";
 $layout = Layout::get_instance();
 $layout->get_static();
 
-$nodel = new Nodel(2);
-$nodel = new Nodel(3);
-$nodel = new Nodel(4);
+$product = new Product();
+$product->description = "description";
+$product->name = "product1";
+$product->price = 750;
+$product->image = "../static/image/product1.jpg";
+$product->save();
+
+// $nodel = new Nodel();
+
+// $nodel = new Nodel();
+
+// $nodel = new Nodel();
 // $nodel->description = "test";
 // $nodel->name = "product";
 // $nodel->price = 2000;
