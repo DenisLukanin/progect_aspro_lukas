@@ -5,8 +5,17 @@ include "./bootstrap.php";
 $layout = Layout::get_instance();
 $layout->get_static();
 
-$nodel = new Nodel(1);
-$nodel->description = "test nodel";
+$nodel = new Nodel(2);
+$nodel = new Nodel(3);
+$nodel = new Nodel(4);
+// $nodel->description = "test";
+// $nodel->name = "product";
+// $nodel->price = 2000;
+// aa($nodel->test_prop());
+// $nodel->save();
+
+
+
 
 
 /**

@@ -2,13 +2,13 @@
 
 class Db {
     public $conection;
-    private $columns_id = "id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY";
+    // private $columns_id = "id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY";
     private static $instance;
     const NOT_ID = false;
-    static function T_INT($count = 10){
+    static function T_INT(int $count = 10){
         return "INT($count)";
     } 
-    static function T_VARCHAR($count = 255){
+    static function T_VARCHAR(int $count = 255){
         return "VARCHAR($count)";
     } 
     const T_TEXT = "TEXT";
@@ -52,13 +52,15 @@ class Db {
         // echo "ok";
         $reqest = "CREATE TABLE $name (".$this->create_columns($columns, $id).");";
         // echo $reqest;
-        $this->conection->exec($reqest);
+        $result = $this->conection->query($reqest);
+        // aa( $this->conection->errorInfo());
+        
     }
 
     public function create_columns(array $columns, bool $id): string{
         $columns_request = [];
 
-        if ($id) $columns_request[] = $this->columns_id;
+        // if ($id) $columns_request[] = $this->columns_id;
 
         $columns = array_map(fn ($item) => implode(" " , $item), $columns);
         foreach ($columns as $name => $value){
@@ -93,12 +95,16 @@ class Db {
     public function insert(string $name, array $arr){
         $keys = implode(", ", array_keys($arr));
         $keys_placeholder = implode(", ", array_map(fn ($item) => ":".$item, array_keys($arr)) );
+        // echo $keys."<br>".$keys_placeholder;
         
         $stm = $this->conection->prepare("insert into $name ($keys) value ($keys_placeholder)");
         foreach ($arr as $name => $value){
             $stm->bindValue($name , $value);
         }
-        $stm->execute();;
+        // aa($stm);
+        $stm->execute();
+        // aa( $this->conection->errorInfo());
+
         return $this->conection->lastInsertId();
     }
 
@@ -108,6 +114,14 @@ class Db {
 
 
     // получение данных таблицы***********
+    /** пример запроса
+     * ("test", [
+     *   where" => [
+     *      "id = 1"
+     *   ],
+     *   "limit" => "5"
+     *   ])
+     */
     public function select(string $name, array $arr = []){
         $request = "SELECT * FROM $name ";
         if (!$arr){
