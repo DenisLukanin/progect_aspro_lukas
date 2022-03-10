@@ -1,19 +1,26 @@
 <?php
 
 class Db {
-    private $conection;
+    public $conection;
+    private $columns_id = "id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY";
     private static $instance;
-    const T_INT = "INT";
-    const T_VARCHAR = "VARCHAR";
+    const NOT_ID = false;
+    static function T_INT($count = 10){
+        return "INT($count)";
+    } 
+    static function T_VARCHAR($count = 255){
+        return "VARCHAR($count)";
+    } 
     const T_TEXT = "TEXT";
-    const T_DATE = "DATE";
-    const A_I = "AUTO_INCREMENT";
-    const P_KEY = "PRIMARY KEY";
+    const T_DATE = "DATETIME";
     const NULL_DEFAULT = "NULL";
     const NOT_NULL = "NOT NULL";
+    const A_I = "AUTO_INCREMENT";
     static function DEFAULT_VALUE($value){
         return "DEFAULT '$value'";
     }
+    const CUR_TIME = "DEFAULT CURRENT_TIMESTAMP";
+    const P_KEY = "PRIMARY KEY";
     
 
     private function __construct(){
@@ -26,6 +33,11 @@ class Db {
         }
         return self::$instance;
     }
+
+
+
+
+
     // создание соединения*************
     private function connect($config_db){
         $this->conection = new PDO("mysql:host=".$config_db["host"].";dbname=".$config_db["name"], $config_db["user"], $config_db["password"]);
@@ -33,20 +45,26 @@ class Db {
 
 
 
+
+
     // создание таблицы*******
-    public function create_table(string $name, array $columns = [] ){
-        $reqest = "create table $name (".$this->create_columns($columns).");";
-        echo $reqest;
+    public function create_table(string $name, array $columns = [] , bool $id = true){
+        // echo "ok";
+        $reqest = "CREATE TABLE $name (".$this->create_columns($columns, $id).");";
+        // echo $reqest;
         $this->conection->exec($reqest);
     }
 
-    public function create_columns(array $columns): string{
-        $columns_request = "";
-        $columns = array_map(fn ($item) => implode(" " , $item) , $columns);
+    public function create_columns(array $columns, bool $id): string{
+        $columns_request = [];
+
+        if ($id) $columns_request[] = $this->columns_id;
+
+        $columns = array_map(fn ($item) => implode(" " , $item), $columns);
         foreach ($columns as $name => $value){
-            $columns_request .= $name." ".$value.", ";
+            $columns_request[] = $name." ".$value;
         }
-        return substr($columns_request, 0, -2);
+        return implode(", " , $columns_request);
     }
 
 
@@ -54,17 +72,24 @@ class Db {
 
 
     // проверка существования талицы*********************
-    public function table_exist($table_name): bool {
-        if($this->conection->exec("select * from $table_name") === false){
-            return false;
-        } else {
-            return true;
-        }
+    public function table_exist($table_name): bool { 
+        $result = $this->conection->query("SHOW TABLES LIKE '$table_name'");
+        
+        if ($result->fetch()) return true;
+        return false;
+
     }
 
 
 
+
+
     // запись в таблицу****************
+    // пример запроса
+    // "test5",[
+        //     "age" => "27",
+        // ]
+
     public function insert(string $name, array $arr){
         $keys = implode(", ", array_keys($arr));
         $keys_placeholder = implode(", ", array_map(fn ($item) => ":".$item, array_keys($arr)) );
@@ -80,8 +105,46 @@ class Db {
 
     
 
+
+
     // получение данных таблицы***********
-    public function select(string $name, array $arr){
+    public function select(string $name, array $arr = []){
+        $request = "SELECT * FROM $name ";
+        if (!$arr){
+            // echo "ok";
+            $stm = $this->conection->query($request);
+            return $stm->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            if ($arr["where"]){
+                $request .= " WHERE ". implode(" ", $arr["where"]);
+            }
+            if ($arr["limit"]){
+                $request .= " LIMIT ".$arr["limit"];
+            }
+            // echo $request;
+            $stm = $this->conection->query($request);
+            return $stm->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+    }
+
+
+
+    // Получение информации о полях в таблице
+    function get_field($table_name){
+
+        $sql = $this->conection->prepare("
+            SELECT COLUMN_TYPE , COLUMN_NAME, EXTRA, COLUMN_KEY, COLUMN_DEFAULT, IS_NULLABLE
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = ?
+            AND TABLE_NAME = ?;
+        ");
+        $sql->execute([
+            Config::get_config("db","name") , $table_name
+        ]);
+        $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+        // aa($result);
+        return $result;
         
     }
 
