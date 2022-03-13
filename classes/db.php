@@ -2,13 +2,12 @@
 
 class Db {
     public $conection;
-    // private $columns_id = "id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY";
     private static $instance;
     const NOT_ID = false;
-    static function T_INT(int $count = 10){
+    public static function T_INT(int $count = 10){
         return "INT($count)";
     } 
-    static function T_VARCHAR(int $count = 255){
+    public static function T_VARCHAR(int $count = 255){
         return "VARCHAR($count)";
     } 
     const T_TEXT = "TEXT";
@@ -16,7 +15,7 @@ class Db {
     const NULL_DEFAULT = "NULL";
     const NOT_NULL = "NOT NULL";
     const A_I = "AUTO_INCREMENT";
-    static function DEFAULT_VALUE($value){
+    public static function DEFAULT_VALUE($value){
         return "DEFAULT '$value'";
     }
     const CUR_TIME = "DEFAULT CURRENT_TIMESTAMP";
@@ -24,9 +23,11 @@ class Db {
     
 
     private function __construct(){
-        $this->connect(Config::get_config("db"));
+        // echo __METHOD__."<br>";
+        $this->connect();
     }
     public static function get_instance(): Db {
+        // echo __METHOD__."<br>";
         if (self::$instance === NULL){
 
             self::$instance = new self();
@@ -39,28 +40,28 @@ class Db {
 
 
     // создание соединения*************
-    private function connect($config_db){
-        $this->conection = new PDO("mysql:host=".$config_db["host"].";dbname=".$config_db["name"], $config_db["user"], $config_db["password"]);
+    private function connect(){
+        // echo __METHOD__."<br>";
+        $config_db = Config::get_config("db");
+        $this->conection = new PDO("mysql:host=".$config_db["host"].";dbname=".$config_db["name"].";charset=".$config_db["charset"], $config_db["user"], $config_db["password"]);
     }
-
+    
 
 
 
 
     // создание таблицы*******
-    public function create_table(string $name, array $columns = [] , bool $id = true){
-        // echo "ok";
-        $reqest = "CREATE TABLE $name (".$this->create_columns($columns, $id).");";
-        // echo $reqest;
-        $result = $this->conection->query($reqest);
-        // aa( $this->conection->errorInfo());
+    public function create_table(string $name, array $columns = []){
+        // echo __METHOD__."<br>";
+        $reqest = "CREATE TABLE $name (".$this->create_columns($columns).");";
+        $result = $this->conection->prepare($reqest);
+        return $result->execute();
         
     }
 
-    public function create_columns(array $columns, bool $id): string{
+    public function create_columns(array $columns): string{
+        // echo __METHOD__."<br>";
         $columns_request = [];
-
-        // if ($id) $columns_request[] = $this->columns_id;
 
         $columns = array_map(fn ($item) => implode(" " , $item), $columns);
         foreach ($columns as $name => $value){
@@ -70,11 +71,17 @@ class Db {
     }
 
 
-    
+
+
+
+
+
+
 
 
     // проверка существования талицы*********************
     public function table_exist($table_name): bool { 
+        // echo __METHOD__."<br>";
         $result = $this->conection->query("SHOW TABLES LIKE '$table_name'");
         
         if ($result->fetch()) return true;
@@ -89,19 +96,18 @@ class Db {
     // запись в таблицу****************
     // пример запроса
     // "test5",[
-        //     "age" => "27",
-        // ]
+    //     "age" => "27",
+    // ]
 
     public function insert(string $name, array $arr){
+        // echo __METHOD__."<br>";
         $keys = implode(", ", array_keys($arr));
         $keys_placeholder = implode(", ", array_map(fn ($item) => ":".$item, array_keys($arr)) );
-        // echo $keys."<br>".$keys_placeholder;
         
         $stm = $this->conection->prepare("insert into $name ($keys) value ($keys_placeholder)");
         foreach ($arr as $name => $value){
             $stm->bindValue($name , $value);
         }
-        // aa($stm);
         $stm->execute();
         // aa( $this->conection->errorInfo());
 
@@ -123,28 +129,27 @@ class Db {
      *   ])
      */
     public function select(string $name, array $arr = []){
-        $request = "SELECT * FROM $name ";
-        if (!$arr){
-            // echo "ok";
-            $stm = $this->conection->query($request);
-            return $stm->fetchAll(PDO::FETCH_ASSOC);
-        } else {
+        // echo __METHOD__."<br>";
+        $request = "SELECT * FROM $name";
+        if ($arr){
             if ($arr["where"]){
                 $request .= " WHERE ". implode(" ", $arr["where"]);
             }
             if ($arr["limit"]){
                 $request .= " LIMIT ".$arr["limit"];
             }
-            // echo $request;
-            $stm = $this->conection->query($request);
-            return $stm->fetchAll(PDO::FETCH_ASSOC);
         }
+         
+        $result = $this->conection->prepare($request);
+        $result->execute();
+        return $result;
         
     }
 
 
     // обновление записи в таблице
     public function update($table_name, $id, array $new_value){
+        // echo __METHOD__."<br>";
         $request = "
             UPDATE $table_name 
             SET ".$this->set_values($new_value)." 
@@ -165,6 +170,7 @@ class Db {
 
     // Получение информации о полях в таблице
     function get_field($table_name){
+        // echo __METHOD__."<br>";
 
         $sql = $this->conection->prepare("
             SELECT COLUMN_TYPE , COLUMN_NAME, EXTRA, COLUMN_KEY, COLUMN_DEFAULT, IS_NULLABLE
@@ -176,7 +182,6 @@ class Db {
             Config::get_config("db","name") , $table_name
         ]);
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);
-        // aa($result);
         return $result;
         
     }

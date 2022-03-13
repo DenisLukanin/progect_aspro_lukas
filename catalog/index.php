@@ -5,9 +5,9 @@ include "../bootstrap.php";
 
 $layout = Layout::get_instance();
 $layout->set_static("catalog.css");
-$layout->set_static("catalog.css");
-$layout->set_static("general/reset.css");
 $layout->get_static();
+
+
 
 
 $content = [
@@ -36,6 +36,14 @@ $content = [
         "description" => "Неповторимый вкус бразильского Amaretto не оставить вас равнодушными.",
     ],
 ];
+
+foreach ($content as $value){
+    $product = new Product();
+    $product->set($value);
+    $product->save();
+    
+}
+
 
 ?>
 

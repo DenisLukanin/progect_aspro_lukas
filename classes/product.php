@@ -4,20 +4,17 @@ class Product extends Model{
     protected $table_name = "product";
     
     
-    protected $column = [
+    protected $table_columns = [
         "id" => [
-            "INT(11)",
-            Db::NOT_NULL,
-            Db::A_I,
-            Db::P_KEY
+            "INT(11)"
         ],
-        "name" => [
+        "title" => [
             "VARCHAR(50)"
         ],
         "description" => [
             Db::T_TEXT
         ],
-        "image" => [
+        "photo" => [
             "VARCHAR(200)"
         ],
         "price" => [
