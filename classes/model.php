@@ -65,6 +65,7 @@ class Model{
         ];
         $result = $this->db_object->select($this->table_name, $request);     // получаем массив со значением полей у записи
         if (!$result) return false;
+        $result = $result->fetch(PDO::FETCH_ASSOC);
         static::$loader[$id] =  $result;                                     // кешируем если такой элемент есть в таблице
         $this->set($result);                                                 // распаковываем значения в properties
         
@@ -157,6 +158,8 @@ class Model{
                 $this->status_elem = Model::STATUS_UPDATE;                                                      // присвоение статуса изменено для модели
             }
             $this->properties[$name] = $value;                                                                  // записываем новое значение в properties
+            
+        } else {
             echo "$name   - нет такой колонки запись невозможна<br>";
         }
     }
@@ -170,6 +173,50 @@ class Model{
     }
 
 
+    // получить одно значение
+    // [
+    //     "id = 3",
+    //     "title = ''" 
+    // ]
+    function find(array $where = null){
+        // echo __METHOD__."<br>";
+        $filter = [];
+        if ($where) $filter["where"] = $where;
+        $statement = $this->db_object->select($this->table_name, $filter);
+        $sql_result = $statement->fetch(PDO::FETCH_ASSOC);
+        if($sql_result){
+            $this->table_elem_id = $sql_result["id"];
+            $this->set($sql_result);
+            static::$loader[$this->table_elem_id] = $sql_result;
+            $this->status_elem = Model::STATUS_SAVED;
+        }
+        return $this;
+    }
+
+
+
+    // получить все значения
+    function find_all(array $where = null, int $limit = null){
+        // echo __METHOD__."<br>";
+
+        $filter = [];
+        if ($where) $filter["where"] = $where;
+        if ($limit) $filter["limit"] = $limit;
+        $statement = $this->db_object->select($this->table_name, $filter);
+        $sql_result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if(!$sql_result) return $this;
+        $array_model = [];
+        foreach($sql_result as $elem){
+            $array_model[] = new Product($elem["id"]); 
+        }
+        return $array_model;
+        
+    }
+
+    function loaded(){
+        if ($this->status_elem == Model::STATUS_SAVED) return true;
+        return false;
+    }
 
 
 }

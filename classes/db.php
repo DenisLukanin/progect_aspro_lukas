@@ -133,7 +133,7 @@ class Db {
         $request = "SELECT * FROM $name";
         if ($arr){
             if ($arr["where"]){
-                $request .= " WHERE ". implode(" ", $arr["where"]);
+                $request .= " WHERE ". implode(" and ", $arr["where"]);
             }
             if ($arr["limit"]){
                 $request .= " LIMIT ".$arr["limit"];
