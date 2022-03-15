@@ -37,33 +37,35 @@ $content = [
     ],
 ];
 
-foreach ($content as $value){
-    $product = new Product();
-    $product->set($value);
-    $product->save();
-    
-}
+// foreach ($content as $value){
+//     $product = new Product();
+//     $product->set($value);
+//     $product->save();
+// }
+
+$products = new Product();
+$products = $products->find_all();
 
 
 ?>
 
 <div class="container">
     <ul class="catalog_list">
-        <?php foreach($content as $product) {?>
+        <?php foreach($products as $product) {?>
 
             <li class="catalog_item">
-                <div class="catalog_item_photo" style="background-image: url('<?= $product["photo"] ?> ');">
+                <div class="catalog_item_photo" style="background-image: url('<?= $product->photo ?> ');">
                     <a href="#" class="catalog_item_photo_link">
                     </a>
                 </div>
                 <div class="flex_wrap">
                     <a href="" class="catalog_item_title_link">
-                    <h3 class="catalog_item_title"><?= $product["title"] ?></h3>
+                    <h3 class="catalog_item_title"><?= $product->title ?></h3>
                     </a>
-                    <span class="catalog_item_price"><?= $product["price"] ?> р.</span>
+                    <span class="catalog_item_price"><?= $product->price ?> р.</span>
                 </div>
                 <p class="catalog_item_description">
-                    <?= $product["description"] ?>
+                    <?= $product->description ?>
                 </p>
             </li>
 
