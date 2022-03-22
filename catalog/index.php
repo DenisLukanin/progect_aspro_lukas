@@ -10,48 +10,48 @@ $layout->get_static();
 
 
 
-$content = [
-    [
-        "title" => "Бодрящий Americano",
-        "photo" => "../static/img/americano.jpeg",
-        "price" => 100,
-        "description" => "Попробовав Americano с утра, больше не захочется начинать день по другому",
-    ],
-    [
-        "title" => "Классический Capuchino",
-        "photo" => "../static/img/capuchino.jpg",
-        "price" => 200,
-        "description" => "Самый популярный вид кофе Capuchino, лучший способ скоротать ожидание.",
-    ],
-    [
-        "title" => "Воздушный Latte",
-        "photo" => "../static/img/latte.jpg",
-        "price" => 300,
-        "description" => "Напиток которым можно наслаждаться каждый день",
-    ],
-    [
-        "title" => "Ароматный Amaretto",
-        "photo" => "../static/img/amareto.jpg",
-        "price" => 350,
-        "description" => "Неповторимый вкус бразильского Amaretto не оставить вас равнодушными.",
-    ],
-];
+// $content = [
+//     [
+//         "title" => "Бодрящий Americano",
+//         "photo" => "../static/img/americano.jpeg",
+//         "price" => 100,
+//         "description" => "Попробовав Americano с утра, больше не захочется начинать день по другому",
+//     ],
+//     [
+//         "title" => "Классический Capuchino",
+//         "photo" => "../static/img/capuchino.jpg",
+//         "price" => 200,
+//         "description" => "Самый популярный вид кофе Capuchino, лучший способ скоротать ожидание.",
+//     ],
+//     [
+//         "title" => "Воздушный Latte",
+//         "photo" => "../static/img/latte.jpg",
+//         "price" => 300,
+//         "description" => "Напиток которым можно наслаждаться каждый день",
+//     ],
+//     [
+//         "title" => "Ароматный Amaretto",
+//         "photo" => "../static/img/amareto.jpg",
+//         "price" => 350,
+//         "description" => "Неповторимый вкус бразильского Amaretto не оставить вас равнодушными.",
+//     ],
+// ];
 
 // foreach ($content as $value){
 //     $product = new Product();
 //     $product->set($value);
 //     $product->save();
-    
 // }
-$content = new Product();
-$content = $content->find_all();
+
+$products = new Product();
+$products = $products->find_all();
 
 
 ?>
 
 <div class="container">
     <ul class="catalog_list">
-        <?php foreach($content as $product) {?>
+        <?php foreach($products as $product) {?>
 
             <li class="catalog_item">
                 <div class="catalog_item_photo" style="background-image: url('<?= $product->photo ?> ');">
