@@ -14,7 +14,11 @@ function aa($value){
     var_dump($value);
     echo "</pre>";
 };
-
+function aar($value){
+    echo "<pre>";
+    print_r($value);
+    echo "</pre>";
+};
 
 
 

@@ -1,5 +1,4 @@
 <?php
-// include "../bootstrap.php";
 class Config{
 
     private static $config_project = [];
