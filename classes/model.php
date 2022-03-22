@@ -4,7 +4,6 @@ class Model{
     private static $table_exist = [];                // список таблиц которые были закешированы а значит точно есть
     protected static $loader = [];                   // список закешированых записей где id => массив значений
     protected $table_elem_id;                        // id текущей модели 
-    // protected $status_elem = Model::STATUS_NEW;      // статуc текущей модели (по умолчанию новая)
     protected $db_object;                            // объект ДБ
     protected $table_name = "";                      // имя таблицы
     protected $table_columns = [];                   // описание колонок таблицы
@@ -12,11 +11,6 @@ class Model{
     protected $properties_new = [];                  // новые значения которые ждут добавления
     protected $primary_key = "id";
 
-
-                                    // СТАТУСЫ
-    // const STATUS_NEW = "new";                        // новая
-    // const STATUS_UPDATE = "update";                  // измененная
-    // const STATUS_SAVED = "saved";                    // сохраненная
 
 
     function __construct($id = null){
@@ -32,12 +26,10 @@ class Model{
         if($id) {                                                           // передан ли id
             
             $this->table_elem_id = $id; 
-            // $this->status_elem = Model::STATUS_NEW;                         // записываем в переменную id модели с которой сейчас работаем
 
             if (in_array($id, array_keys(static::$loader))) {               // проверка была ли закеширована запись
                   
                 $this->properties = static::$loader[$id];                   // распаковыем значения из кеша в properties
-                // $this->status_elem = Model::STATUS_SAVED;
 
             } else {
                 
@@ -45,7 +37,6 @@ class Model{
                 if(!$result){
                     echo "элемента нет";
                     $this->table_elem_id = null;
-                    // $this->status_elem = null;
                 }
             }
 
@@ -81,18 +72,6 @@ class Model{
         }else{
             $this->create();
         };
-
-        // switch ($this->status_elem) {
-        //     case "new":
-        //         $this->create();
-        //         break;
-        //     case "update":
-        //         $this->update();
-        //         break;
-        //     case "saved":
-        //         echo "значения не изменялись";
-        //         break;
-        // }
         
     }
     // создать новую
@@ -101,18 +80,15 @@ class Model{
         $result = $this->db_object->insert($this->table_name, $this->properties);       // создается запись в таблице
         static::$loader[$result] = $this->properties;                                   // кешируются значения таблиц
         $this->table_elem_id = $result;                                                 // моделе присваивается id под которой она находится в таблице
-        // $this->status_elem = Model::STATUS_SAVED;                                       // присваивается статус сохранено в таблицу
     }
 
 
     // изменить существующую
     protected function update(){
         // echo __METHOD__."<br>";
-        // aa($this->properties_new);
         $this->db_object->update($this->table_name, $this->table_elem_id, $this->properties_new);           // обновляется запись
         static::$loader[$this->table_elem_id] = $this->properties;                                          // изменения фиксируются в кеше
         $this->properties_new = [];                                                                         // обнуляется массив с изменениями
-        // $this->status_elem = Model::STATUS_SAVED;                                                           // присваивается статус сохранено в таблицу
         
     }
 
@@ -159,11 +135,10 @@ class Model{
     function __set($name, $value){
         // echo __METHOD__."<br>";
         if (in_array($name, array_keys($this->table_columns))) {                                                // определена ли такая колонка в таблице
-            if ($this->table_elem_id && $this->properties[$name] != $value /*&& $this->status_elem != "new"*/){     // проверка определен ли id для модели, отличается ли значение от существующего
+            if ($this->table_elem_id && $this->properties[$name] != $value){                                    // проверка определен ли id для модели, отличается ли значение от существующего
                                                                                                                 // - имеет ли таблица статус новой   
                 
                 $this->properties_new[$name] = $value;                                                          // записываем новое значение в массив для update
-                // $this->status_elem = Model::STATUS_UPDATE;                                                      // присвоение статуса изменено для модели
             }
             $this->properties[$name] = $value;                                                                  // записываем новое значение в properties
             
@@ -196,7 +171,6 @@ class Model{
             $this->table_elem_id = $sql_result["id"];
             $this->set($sql_result);
             static::$loader[$this->table_elem_id] = $sql_result;
-            // $this->status_elem = Model::STATUS_SAVED;
         }
         return $this;
     }
@@ -222,8 +196,7 @@ class Model{
     }
 
     function loaded(){
-        // if ($this->status_elem == Model::STATUS_SAVED) return true;
-
+        if ($this->table_elem_id) return true;
         return false;
     }
 
