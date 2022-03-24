@@ -59,7 +59,7 @@ class Db {
         
     }
 
-    public function create_columns(array $columns): string{
+    private function create_columns(array $columns): string{
         // echo __METHOD__."<br>";
         $columns_request = [];
 
