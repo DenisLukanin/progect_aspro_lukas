@@ -115,12 +115,10 @@ class Layout
     private function __clone()
     {
         throw new Exception("No clone", 1);
-        
     }
     private function __wakeup()
     {
         throw new Exception("No unserialize", 1);
-        
     }
 }
 

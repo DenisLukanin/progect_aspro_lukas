@@ -5,10 +5,14 @@ class Route {
     private static $instance;
     private $config = [];
     private $url;
+    private $params = [];
+    private function head_directory_path() {
+        return $_SERVER["DOCUMENT_ROOT"]."/";
+    }
 
     private function __construct(){
         $this->config = Config::get_config("route");
-        $this->url = $_SERVER["REQUEST_URI"];
+        $this->url = $_SERVER["REDIRECT_URL"];
     }
 
     public static function get_instance(): Route{
@@ -23,20 +27,33 @@ class Route {
     
     // подключение файла если есть такой роут
     function load_file(){
-        if(in_array($this->url , array_keys($this->config))){
-            echo "ok";
-            include $this->config[$this->url];
-        } else  {
-            throw new Exception("No find" , 404);
+
+        foreach($this->config as $template => $path){
+            $rule = "#^{$template}$#";
+            $resul_matches = preg_match($rule, $this->url, $matches);
+            if($resul_matches){
+                $this->set_params($matches);
+                include $this->head_directory_path().$path;
+                return;
+            }
         }
-        
+        throw new Exception("no find", 404);
     }
 
 
+    // запись именованых групп из регулярки в переменную
+    private function set_params(array $matches){
+        foreach($matches as $name => $value){
+            if(!is_numeric($name)){
+                $this->params[$name] = $value;
+            }
+        }
+    }
 
-    // распковка параметров
-    function get_param(){
-        
+
+    // выдача именованных групп из переменной
+    function get_params(){
+        return $this->params;
     }
 
 

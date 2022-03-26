@@ -1,11 +1,9 @@
 <?php
-include "../bootstrap.php";
 
 
 
-$layout = Layout::get_instance();
-$layout->set_static("catalog.css");
-$layout->get_static();
+Layout::get_instance()->set_static("catalog.css");
+Layout::get_instance()->get_static();
 
 
 

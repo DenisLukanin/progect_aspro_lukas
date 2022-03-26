@@ -57,6 +57,7 @@ class Model{
         $result = $this->db_object->select($this->table_name, $request);     // получаем массив со значением полей у записи
         if (!$result) return false;
         $result = $result->fetch(PDO::FETCH_ASSOC);
+        if (!$result) return false;
         static::$loader[$id] =  $result;                                     // кешируем если такой элемент есть в таблице
         $this->set($result);                                                 // распаковываем значения в properties
         
