@@ -53,11 +53,11 @@ $products = $products->find_all();
 
             <li class="catalog_item">
                 <div class="catalog_item_photo" style="background-image: url('<?= $product->photo ?> ');">
-                    <a href="#" class="catalog_item_photo_link">
+                    <a href="/catalog/<?= $product->id ?>/" class="catalog_item_photo_link">
                     </a>
                 </div>
                 <div class="flex_wrap">
-                    <a href="" class="catalog_item_title_link">
+                    <a href="/catalog/<?= $product->id ?>/" class="catalog_item_title_link">
                     <h3 class="catalog_item_title"><?= $product->title ?></h3>
                     </a>
                     <span class="catalog_item_price"><?= $product->price ?> р.</span>

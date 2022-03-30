@@ -195,12 +195,17 @@ class Model{
         return $array_model;
         
     }
-
+    // проверяет загруженность таблицы
     function loaded(){
         if ($this->table_elem_id) return true;
         return false;
     }
 
+    
+    // возвращает модель в json
+    function get_json(){
+        return json_encode($this->properties, JSON_UNESCAPED_UNICODE);
+    }
 
 }
 ?>
