@@ -68,8 +68,8 @@ class Layout
         };
     }
     function get_static(){
+        $this->get_static_style();
         $this->get_static_script();
-        $this-> get_static_style();
     }
 
     // определяем скрипт это или стиль
