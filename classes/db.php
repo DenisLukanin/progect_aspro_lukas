@@ -83,6 +83,7 @@ class Db {
     public function table_exist($table_name): bool { 
         // echo __METHOD__."<br>";
         $result = $this->conection->query("SHOW TABLES LIKE '$table_name'");
+        // aa($this->conection->errorInfo());
         
         if ($result->fetch()) return true;
         return false;

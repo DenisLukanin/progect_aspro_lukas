@@ -1,27 +1,36 @@
-
-const App = {
+const App = Vue.createApp({});
+App.component("product", {
     data() {
         return {
-            title: 'Ароматный Amaretto',
-            photo: "../../static/img/amareto.jpg",
-            price: 350,
-            description: "Неповторимый вкус бразильского Amaretto не оставить вас равнодушными.",
+            id:"",
+            title: '',
+            photo: "",
+            price: 0,
+            description: "",
         }
     },
-    methods: {
-        adda(){
-            alert("ok")
-            // $.ajax({
-            //     url: 'catalog/rest/product/1/',         /* Куда пойдет запрос */
-            //     method: 'post',                         /* Метод передачи (post или get) */
-            //     dataType: 'json',                       /* Тип данных в ответе (xml, json, script, html). */
-            //     data: {},                               /* Параметры передаваемые в запросе. */
-            //     success: function(data){                /* функция которая будет выполнена после успешного запроса.  */
-            //         alert(data);                        /* В переменной data содержится ответ от index.php. */
-            //     }
-            // })
-        }
-    }
-}
+    props: ["product_id"],
+    created: function(){
+        fetch("http://project-aspro/catalog/rest/product/"+ this.product_id +"/")
+            .then( response  => response.json())
+            .then( product  => {
+                this.id = product["id"],
+                this.title = product["title"],
+                this.photo = "../"+product["photo"],
+                this.price = product["price"],
+                this.description = product["description"]
+            });
+    },
+    template: `
+    <div class="flex_vrap">
+        <img class="photo" :src="photo" :alt="title" >
+        <div class="decription">
+            <h1 class="title">{{ title }}</h1>
+            <p class="text">{{ description }}</p>
+            <span class="price">{{ price }} р.</span>
+        </div>
+    </div>`
+});
+App.mount('#app');
 
-Vue.createApp(App).mount('#app')
+

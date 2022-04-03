@@ -72,6 +72,13 @@ class Layout
         $this->get_static_script();
     }
 
+
+
+    public function set_statics(array $paths){
+        foreach($paths as $path){
+            $this->set_static($path);
+        }
+    }
     // определяем скрипт это или стиль
     public function set_static($path){
         $path_info = pathinfo($path);  
