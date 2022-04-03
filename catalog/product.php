@@ -3,7 +3,7 @@
     $layout->set_statics(["product_detail.css","vue.min.js","product_detail.js"]);
     $layout->get_static_style();
     $product_id = Route::get_instance()->get_params();
-    $product = new Product($product["product_id"]);
+    $product = new Product($product_id["product_id"]);
 ?>
 
 <div class="container" id="app" v-cloak >

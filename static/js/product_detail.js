@@ -3,7 +3,7 @@ App.component("product", {
     data() {
         return {
             id:"",
-            title: '',
+            title: "",
             photo: "",
             price: 0,
             description: "",
@@ -11,7 +11,7 @@ App.component("product", {
     },
     props: ["product_id"],
     created: function(){
-        fetch("http://project-aspro/catalog/rest/product/"+ this.product_id +"/")
+        fetch("/catalog/rest/product/"+ this.product_id +"/")
             .then( response  => response.json())
             .then( product  => {
                 this.id = product["id"],
