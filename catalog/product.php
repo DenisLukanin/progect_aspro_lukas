@@ -1,4 +1,6 @@
 <?php
+    use Catalog\Model\Product;
+
     $layout = Layout::get_instance();
     $layout->set_statics(["product_detail.css","vue.min.js","product_detail.js"]);
     $layout->get_static_style();

@@ -16,12 +16,12 @@ class Model{
     function __construct($id = null){
         // echo __METHOD__."<br>";
         $this->db_object = Db::get_instance();                              // инициализируем объект бд
-        if (!in_array($this->table_name, array_keys(Model::$table_exist))){ // проверка кеша в котором указывается была ли таблица заширована
+        if (!in_array($this->table_name, array_keys(self::$table_exist))){ // проверка кеша в котором указывается была ли таблица заширована
             if (!$this->check_table()){                                     // проверка существует ли таблица
                 $this->create_table();                                      // создание таблицы
                               
             }   
-            Model::$table_exist[$this->table_name] = true;                  // кеширование того что таблица есть
+            self::$table_exist[$this->table_name] = true;                  // кеширование того что таблица есть
         }
         if($id) {                                                           // передан ли id
             
@@ -190,7 +190,7 @@ class Model{
         if(!$sql_result) return $this;
         $array_model = [];
         foreach($sql_result as $elem){
-            $array_model[] = new Product($elem["id"]); 
+            $array_model[] = new static($elem["id"]); 
         }
         return $array_model;
         
@@ -205,6 +205,20 @@ class Model{
     // возвращает модель в json
     function get_json(){
         return json_encode($this->properties, JSON_UNESCAPED_UNICODE);
+    }
+
+
+    // удаление записи
+    function delete($id){
+        if(in_array($id , array_keys(static::$loader))){
+            if($this->db_object->delete($this->table_name,$id)){
+                unset(static::$loader["$id"]);
+                return true;
+            };
+        } else {
+            return $this->db_object->delete($this->table_name,$id);
+        }
+
     }
 
 }

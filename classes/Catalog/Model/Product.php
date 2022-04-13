@@ -1,6 +1,10 @@
 <?php
 
-class Product extends Model{
+namespace Catalog\Model;
+
+
+
+class Product extends \Model{
     protected $table_name = "product";
     
     
@@ -12,7 +16,7 @@ class Product extends Model{
             "VARCHAR(50)"
         ],
         "description" => [
-            Db::T_TEXT
+            \Db::T_TEXT
         ],
         "photo" => [
             "VARCHAR(200)"

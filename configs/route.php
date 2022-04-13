@@ -1,9 +1,28 @@
 <?php
 return [
-    "/catalog/" => "catalog/index.php",  
-    "/test/" => "test/index.php",
-    "/catalog/(?<product_id>[^/]+)/" => "catalog/product.php",
-    "/" => "pages/head_page.php",
-    "/catalog/rest/product/(?<product_id>[^/]+)/" => "catalog/rest.php",
+    [
+        "url" => "/(?<module>[^/]+)/rest/(?<rest>[^/]+)/(?<action>[^/]+)/(?<id>[^/]+)/",
+        "controller" => "\Rest::dispatch",
+    ],
+    [
+        "url" => "/catalog/rest/product/(?<product_id>[^/]+)/",
+        "file" => "catalog/rest.php",
+    ],
+    [
+        "url" => "/",
+        "file" => "pages/head_page.php",
+    ],
+    [
+        "url" => "/catalog/(?<product_id>[^/]+)/",
+        "file" => "catalog/product.php",
+    ],
+    [
+        "url" => "/test/",
+        "file" => "test/index.php",
+    ],
+    [
+        "url" => "/catalog/",
+        "file" => "catalog/index.php",
+    ], 
 ]
 ?>

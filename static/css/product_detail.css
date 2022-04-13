@@ -5,8 +5,11 @@
     display: flex;
     align-items: center;
     margin: 100px 0 0 0;
+    position: relative;
 }
-
+.delete_icon{
+    position:absolute;
+}
 .decription{
     max-width: 300px;
     display: flex;

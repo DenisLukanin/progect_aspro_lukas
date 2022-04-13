@@ -27,17 +27,34 @@ class Route {
     
     // подключение файла если есть такой роут
     function load_file(){
-
-        foreach($this->config as $template => $path){
-            $rule = "#^{$template}$#";
+        foreach($this->config as $template){
+            $rule = "#^{$template["url"]}$#";
             $resul_matches = preg_match($rule, $this->url, $matches);
+            
             if($resul_matches){
                 $this->set_params($matches);
-                include $this->head_directory_path().$path;
+                if($template["controller"]) {
+                    $template["controller"]();
+                } else {
+                    include $this->head_directory_path().$template["file"];
+                }
                 return;
             }
         }
         throw new Exception("no find", 404);
+
+        
+
+        // foreach($this->config as $template => $path){
+        //     $rule = "#^{$template}$#";
+        //     $resul_matches = preg_match($rule, $this->url, $matches);
+        //     if($resul_matches){
+        //         $this->set_params($matches);
+        //         include $this->head_directory_path().$path;
+        //         return;
+        //     }
+        // }
+        // throw new Exception("no find", 404);
     }
 
 

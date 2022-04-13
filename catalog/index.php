@@ -2,11 +2,11 @@
 
 
 
-Layout::get_instance()->set_static("catalog.css");
-Layout::get_instance()->get_static();
+Layout::get_instance()->set_statics(["catalog.css", "delete_product.js"]);
+Layout::get_instance()->get_static_style();
 
 
-
+use Catalog\Model\Product;
 
 // $content = [
 //     [
@@ -50,11 +50,12 @@ $products = $products->find_all();
 <div class="container">
     <ul class="catalog_list">
         <?php foreach($products as $product) {?>
-
-            <li class="catalog_item">
+            
+            <li class="catalog_item" product_id="<?= $product->id ?>">
                 <div class="catalog_item_photo" style="background-image: url('<?= $product->photo ?> ');">
                     <a href="/catalog/<?= $product->id ?>/" class="catalog_item_photo_link">
                     </a>
+                    <span class="delete_icon" delete_elem >x</span>
                 </div>
                 <div class="flex_wrap">
                     <a href="/catalog/<?= $product->id ?>/" class="catalog_item_title_link">
@@ -69,5 +70,8 @@ $products = $products->find_all();
 
         <?php }?>
     </ul>
+    
+    <?php Layout::get_instance()->get_static_script(); ?>
+
 
 </div>

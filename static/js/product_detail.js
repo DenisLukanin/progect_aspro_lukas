@@ -11,7 +11,7 @@ App.component("product", {
     },
     props: ["product_id"],
     created: function(){
-        fetch("/catalog/rest/product/"+ this.product_id +"/")
+        fetch("/Catalog/rest/Product/get/"+ this.product_id +"/")
             .then( response  => response.json())
             .then( product  => {
                 this.id = product["id"],

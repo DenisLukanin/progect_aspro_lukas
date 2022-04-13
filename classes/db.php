@@ -187,6 +187,17 @@ class Db {
         
     }
 
+    // удаление записи из таблицы
+    function delete($table_name, $id){
+        $sql = "
+            DELETE
+            FROM $table_name
+            WHERE id = $id
+        ";
+        $stm = $this->conection->prepare($sql);
+        return $stm->execute();
+    }
+
 
 
 
