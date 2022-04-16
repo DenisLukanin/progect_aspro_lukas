@@ -7,9 +7,11 @@ class Rest{
         self::include_action();
 
     }
+
+    
     private static function include_action(){
-        $name = "\\".self::$matches['module']."\\Rest\\".self::$matches['rest']."::action_".self::$matches['action'];
-        $name(self::$matches['id']);
+        $name = "\\".ucfirst(self::$matches['module'])."\\Rest\\".ucfirst(self::$matches['rest'])."::action_".self::$matches['action'];
+        $name();
     }
 }
 
