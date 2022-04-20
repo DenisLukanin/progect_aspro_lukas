@@ -1,5 +1,5 @@
 <?php
-
+include "test/ChromePhp.php";
 
 class Route {
     private static $instance;
@@ -11,11 +11,19 @@ class Route {
     }
 
     private function __construct(){
+        // echo __METHOD__."<br>";
         $this->config = Config::get_config("route");
         $this->url = $_SERVER["REDIRECT_URL"];
+        
     }
 
+    /**
+     * создание экземпляра класса, либо возврат уже существуещего экземпляра
+     *
+     * @return Route
+     */
     public static function get_instance(): Route{
+        // echo __METHOD__."<br>";
         if (self::$instance === null){
             self::$instance = new self();
         }
@@ -25,16 +33,31 @@ class Route {
 
 
     
-    // подключение файла если есть такой роут
+    /**
+     * подключение файла если есть такой роут
+     *
+     * @return void
+     */
     function load_file(){
+        
+        // echo __METHOD__."<br>";
         foreach($this->config as $template){
             $rule = "#^{$template["url"]}$#";
             $resul_matches = preg_match($rule, $this->url, $matches);
             
             if($resul_matches){
+                
                 $this->set_params($matches);
                 if($template["controller"]) {
-                    $template["controller"]();
+                    if($template["controller"] == "\View"){
+                        $view_element = $template["controller"]::get_instance();
+                        $action = $template["action"];
+                        $view_element->$action();
+                    } else {
+                        $action = $template["controller"]."::".$template["action"];
+                        $action();
+                    }
+                    
                 } else {
                     include $this->head_directory_path().$template["file"];
                 }
@@ -45,21 +68,18 @@ class Route {
 
         
 
-        // foreach($this->config as $template => $path){
-        //     $rule = "#^{$template}$#";
-        //     $resul_matches = preg_match($rule, $this->url, $matches);
-        //     if($resul_matches){
-        //         $this->set_params($matches);
-        //         include $this->head_directory_path().$path;
-        //         return;
-        //     }
-        // }
-        // throw new Exception("no find", 404);
     }
 
 
-    // запись именованых групп из регулярки в переменную
+    
+    /**
+     * запись именованых групп из регулярки в переменную
+     *
+     * @param array $matches
+     * @return void
+     */
     private function set_params(array $matches){
+        // echo __METHOD__."<br>";
         foreach($matches as $name => $value){
             if(!is_numeric($name)){
                 $this->params[$name] = $value;
@@ -68,8 +88,14 @@ class Route {
     }
 
 
-    // выдача именованных групп из переменной
+    
+    /**
+     * выдача именованных групп из переменной
+     *
+     * @return void
+     */
     function get_params(){
+        // echo __METHOD__."<br>";
         return $this->params;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
     namespace Catalog\Rest;
     
     use Catalog\Model\Product as Product_model;

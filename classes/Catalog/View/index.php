@@ -1,9 +1,8 @@
 <?php
 
+View::get_instance()->static = ["catalog.css", "delete_product.js"];
+View::get_instance()->title = "Каталог товаров";
 
-
-Layout::get_instance()->set_statics(["catalog.css", "delete_product.js"]);
-Layout::get_instance()->get_static_style();
 
 
 use Catalog\Model\Product;
@@ -53,12 +52,12 @@ $products = $products->find_all();
             
             <li class="catalog_item" product_id="<?= $product->id ?>">
                 <div class="catalog_item_photo" style="background-image: url('<?= $product->photo ?> ');">
-                    <a href="/catalog/<?= $product->id ?>/" class="catalog_item_photo_link">
+                    <a href="/catalog/product/<?= $product->id ?>/" class="catalog_item_photo_link">
                     </a>
                     <span class="delete_icon" delete_elem >x</span>
                 </div>
                 <div class="flex_wrap">
-                    <a href="/catalog/<?= $product->id ?>/" class="catalog_item_title_link">
+                    <a href="/catalog/product/<?= $product->id ?>/" class="catalog_item_title_link">
                     <h3 class="catalog_item_title"><?= $product->title ?></h3>
                     </a>
                     <span class="catalog_item_price"><?= $product->price ?> р.</span>
@@ -71,7 +70,6 @@ $products = $products->find_all();
         <?php }?>
     </ul>
     
-    <?php Layout::get_instance()->get_static_script(); ?>
 
 
 </div>

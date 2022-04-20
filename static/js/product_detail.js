@@ -16,7 +16,7 @@ App.component("product", {
             .then( product  => {
                 this.id = product["id"],
                 this.title = product["title"],
-                this.photo = "../"+product["photo"],
+                this.photo = "../../"+product["photo"],
                 this.price = product["price"],
                 this.description = product["description"]
             });
