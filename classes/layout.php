@@ -78,6 +78,7 @@ class Layout
         foreach($paths as $path){
             $this->set_static($path);
         }
+        aa(self::$list_static);
     }
     // определяем скрипт это или стиль
     public function set_static($path){

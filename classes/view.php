@@ -45,7 +45,13 @@ class View{
 
     function dispatch(){
         if($this->matches["module"]){
-            $this->module =  file_exists(self::head_directory_classes().ucfirst($this->matches["module"])) ? ucfirst($this->matches["module"]) : "Main";
+            if(file_exists(self::head_directory_classes().ucfirst($this->matches["module"]))){
+                $this->module =  ucfirst($this->matches["module"]);
+            } else {
+                include self::head_directory_path()."errors/404.php";
+                die();
+            }
+            
         } else {
             $this->module = "Main";
         }
@@ -54,7 +60,8 @@ class View{
             if (file_exists(self::head_directory_classes().$this->module."/View/".$this->matches["name"].".php")){
                 $this->name_view = $this->matches["name"].".php";
             } else {
-                echo "такого файла нет ".$this->matches["name"];
+                include self::head_directory_path()."errors/404.php";
+                die();
             }
         } else {
             $this->name_view = "index.php";
