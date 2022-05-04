@@ -10,7 +10,8 @@ class Rest{
 
     
     private static function include_action(){
-        $name = "\\".ucfirst(self::$matches['module'])."\\Rest\\".ucfirst(self::$matches['rest'])."::action_".self::$matches['action'];
+        $name = "\\Module\\".ucfirst(self::$matches['module'])."\\Rest\\".ucfirst(self::$matches['rest'])."::action_".self::$matches['action'];
+        // aa($name);
         $name();
     }
 }

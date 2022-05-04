@@ -24,7 +24,7 @@ class View{
     private function __construct(){
         
         // echo __METHOD__."<br>";
-        $this->matches = Route::get_instance()->get_params();
+        $this->matches = Route::get_instance()->get_params();   // получение параметров переданных в url
     }
 
     /**
@@ -45,7 +45,7 @@ class View{
 
     function dispatch(){
         if($this->matches["module"]){
-            if(file_exists(self::head_directory_classes().ucfirst($this->matches["module"]))){
+            if(file_exists(self::head_directory_classes()."Module/".ucfirst($this->matches["module"]))){
                 $this->module =  ucfirst($this->matches["module"]);
             } else {
                 include self::head_directory_path()."errors/404.php";
@@ -57,7 +57,7 @@ class View{
         }
 
         if($this->matches["name"]){
-            if (file_exists(self::head_directory_classes().$this->module."/View/".$this->matches["name"].".php")){
+            if (file_exists(self::head_directory_classes()."Module/".$this->module."/View/".$this->matches["name"].".php")){
                 $this->name_view = $this->matches["name"].".php";
             } else {
                 include self::head_directory_path()."errors/404.php";
@@ -76,6 +76,8 @@ class View{
             $this->info = $this->matches["info"]; 
         }
 
+        
+
         $this->render($this->name_view);
     }
 
@@ -90,7 +92,7 @@ class View{
     // подключает контент
     function include($name, $params =[]){
         ob_start();
-        include self::head_directory_classes().$this->module."/View/".$name;
+        include self::head_directory_classes()."Module/".$this->module."/View/".$name;
         return ob_get_clean();
     }
 

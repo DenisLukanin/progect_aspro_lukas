@@ -1,21 +1,12 @@
 <?php
 return [
-    [
-        "url" => "/(?<module>[^/]+)/view/(?<name>[^/]+)/(?<id>[^/]+)/(?<info>[^/]+)/",
-        "controller" => "\View",
-        "action" => "dispatch",
-    ],
-    [
-        "url" => "/(?<module>[^/]+)/view/(?<name>[^/]+)/(?<id>[^/]+)/",
-        "controller" => "\View",
-        "action" => "dispatch",
-    ],
-    [
-        "url" => "/(?<module>[^/]+)/view/(?<name>[^/]+)/",
-        "controller" => "\View",
-        "action" => "dispatch",
-    ],
     
+    // [
+    //     "url" => "/catalog/product/(?<component>[^/]+)/",
+    //     "controller" => "\Component",
+    //     "action" => "factory",
+    //     "name" => "model_create",
+    // ],
     [
         "url" => "/(?<module>[^/]+)/(?<name>[^/]+)/(?<id>[^/]+)/",
         "controller" => "\View",
@@ -37,6 +28,11 @@ return [
     ],
     [
         "url" => "/(?<module>[^/]+)/rest/(?<rest>[^/]+)/(?<action>[^/]+)/(?<id>[^/]+)/",
+        "controller" => "\Rest",
+        "action" => "dispatch",
+    ],
+    [
+        "url" => "/(?<module>[^/]+)/rest/(?<rest>[^/]+)/(?<action>[^/]+)/",
         "controller" => "\Rest",
         "action" => "dispatch",
     ],

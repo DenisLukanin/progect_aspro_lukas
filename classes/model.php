@@ -13,10 +13,17 @@ class Model{
 
 
 
-    function __construct($id = null){
+    private static function path() {
+        return $_SERVER['DOCUMENT_ROOT'] ."/";
+    }
+
+
+
+    protected function __construct($id = null){
         // echo __METHOD__."<br>";
+        // echo get_class($this);                                              //получит namespace класса
         $this->db_object = Db::get_instance();                              // инициализируем объект бд
-        if (!in_array($this->table_name, array_keys(self::$table_exist))){ // проверка кеша в котором указывается была ли таблица заширована
+        if (!in_array($this->table_name, array_keys(self::$table_exist))){  // проверка кеша в котором указывается была ли таблица заширована
             if (!$this->check_table()){                                     // проверка существует ли таблица
                 $this->create_table();                                      // создание таблицы
                               
@@ -43,6 +50,57 @@ class Model{
             
         }
     }
+
+    /**
+     * создает необходимую модель в зависимости от параметров
+     *
+     * @param [type] $model
+     * @param [type] $module
+     * @param string $component
+     * @param [type] $id
+     * @return Model
+     */
+    static function factory($model, $module, $component = "", int $id = NULL): Model{
+
+        $model_thiss = ucfirst($model);
+        $module_thiss = ucfirst($module);
+        $component_thiss = ucfirst($component);
+        $id_thiss = $id;
+
+
+        if (file_exists(self::path()."classes/Module/".ucfirst($module))){
+            // echo "ok<br>";
+            
+        } else {
+            // echo "Модуля $module нет <br>";
+        }
+        if (file_exists(self::path()."classes/Module/".ucfirst($module)."/Model/".ucfirst($module).".php")){
+            // echo "ok<br>";
+        } else {
+            // echo self::path()."classes/Module/".ucfirst($module)."/Model/".ucfirst($model).".php<br>";
+        }
+
+        $model_string = "\Module\\".$module_thiss."\Model\\".$model_thiss;
+
+        return new $model_string($id);
+
+    }
+
+    function path_view_create(){
+        return "/catalog/create/";
+    }
+    function path_view_update(){
+        return "/catalog/update/";
+    }
+    function path_rest_create(){
+        return "/catalog/rest/create/";
+    }
+    function path_rest_update(){
+        return "/catalog/rest/update/";
+    }
+
+
+
 
 
     // достает запись из базы данных
@@ -98,6 +156,7 @@ class Model{
     // создание таблицы
     function create_table(){
         // echo __METHOD__."<br>";
+        $result = [];
         foreach($this->table_columns as $name => &$type){
             if ($name == $this->primary_key){
                 $type[] = Db::A_I;
@@ -106,10 +165,16 @@ class Model{
             if (is_string($type)){
                 $this->table_columns[$this->primary_key] = [$type];
             }
+            foreach($type as $system => $value){
+                if ($system !== "lable") {
+                    $result[$name][] = $value;
+                }
+            }
+            
         }
         unset($type);
 
-        $this->db_object->create_table($this->table_name, $this->table_columns);
+        $this->db_object->create_table($this->table_name, $result);
     }
 
 
@@ -179,7 +244,7 @@ class Model{
 
 
     // получить все значения
-    function find_all(array $where = null, int $limit = null){
+    function find_all(array $where = null, int $limit = null): array{
         // echo __METHOD__."<br>";
 
         $filter = [];
@@ -219,6 +284,15 @@ class Model{
             return $this->db_object->delete($this->table_name,$id);
         }
 
+    }
+
+    // возвращает колонки у которых есть Лейбл
+    function get_form_fields(): array{
+        $form = [];
+        foreach($this->table_columns as $name_column => $setting_column){
+            if ($setting_column["lable"]) $form[$name_column] = $setting_column;
+        }
+        return $form;
     }
 
 }

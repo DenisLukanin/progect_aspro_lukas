@@ -3,13 +3,9 @@
 class Db {
     public $conection;
     private static $instance;
-    const NOT_ID = false;
-    public static function T_INT(int $count = 10){
-        return "INT($count)";
-    } 
-    public static function T_VARCHAR(int $count = 255){
-        return "VARCHAR($count)";
-    } 
+    const NOT_ID = false;     
+    const T_INT = "INT(11)";
+    const T_VARCHAR = "VARCHAR(255)";
     const T_TEXT = "TEXT";
     const T_DATE = "DATETIME";
     const NULL_DEFAULT = "NULL";
@@ -56,13 +52,11 @@ class Db {
         $reqest = "CREATE TABLE $name (".$this->create_columns($columns).");";
         $result = $this->conection->prepare($reqest);
         return $result->execute();
-        
     }
 
     private function create_columns(array $columns): string{
         // echo __METHOD__."<br>";
         $columns_request = [];
-
         $columns = array_map(fn ($item) => implode(" " , $item), $columns);
         foreach ($columns as $name => $value){
             $columns_request[] = $name." ".$value;

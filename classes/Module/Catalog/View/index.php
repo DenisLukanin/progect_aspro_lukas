@@ -1,11 +1,13 @@
 <?php
 
-View::get_instance()->static = ["catalog.css", "delete_product.js"];
+// View::get_instance()->static = ["catalog.css", "delete_product.js"];
+
+Layout::get_instance()->set_statics(["catalog.css", "delete_product.js"]);
+
 View::get_instance()->title = "Каталог товаров";
 
 
 
-use Catalog\Model\Product;
 
 // $content = [
 //     [
@@ -40,13 +42,14 @@ use Catalog\Model\Product;
 //     $product->save();
 // }
 
-$products = new Product();
+$products = Model::factory("product", "catalog");
 $products = $products->find_all();
 
 
 ?>
 
 <div class="container">
+    <a href="/test/">Добавить товар</a>
     <ul class="catalog_list">
         <?php foreach($products as $product) {?>
             

@@ -1,5 +1,5 @@
 <?php
-include "test/ChromePhp.php";
+// include "test/ChromePhp.php";
 
 class Route {
     private static $instance;
@@ -55,7 +55,11 @@ class Route {
                         $view_element->$action();
                     } else {
                         $action = $template["controller"]."::".$template["action"];
-                        $action();
+                        if ($template["name"]) {
+                            $action($template["name"]);
+                        } else {
+                            $action();
+                        }
                     }
                     
                 } else {
