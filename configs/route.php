@@ -13,6 +13,11 @@ return [
         "action" => "dispatch",
     ],
     [
+        "url" => "/(?<module>[^/]+)/(?<name>[^/]+)/",
+        "controller" => "\View",
+        "action" => "dispatch",
+    ],
+    [
         "url" => "/",
         "controller" => "\View",
         "action" => "dispatch",

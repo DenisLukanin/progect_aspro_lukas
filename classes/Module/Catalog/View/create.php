@@ -1,15 +1,21 @@
 <?php
 
+View::get_instance()->title = "Создание товара";
+
+    
 $component_model_create = Component::factory("model_create", [
     "module" => "catalog",
     "model" => "product",
 ]);
+// $component_model_create->render();
+
+
 
 
 $form_field = $component_model_create->get_target();
 
 ?>
-<form action="../catalog/rest/product/create/" method="post">
+<form action="<?php echo '../../' . Model::path_rest_create()?>" method="post">
 <?php
 
 foreach($form_field as $name_field => $parametrs_field){
@@ -25,3 +31,5 @@ foreach($form_field as $name_field => $parametrs_field){
 }
 
 ?>
+<input type="submit" value="SAVE">
+</form>

@@ -1,6 +1,5 @@
 <?php
 
-// View::get_instance()->static = ["catalog.css", "delete_product.js"];
 
 Layout::get_instance()->set_statics(["catalog.css", "delete_product.js"]);
 
@@ -49,7 +48,7 @@ $products = $products->find_all();
 ?>
 
 <div class="container">
-    <a href="/test/">Добавить товар</a>
+    <a href="<?php echo '../' . Model::path_view_create();?>">Добавить товар</a>
     <ul class="catalog_list">
         <?php foreach($products as $product) {?>
             

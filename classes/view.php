@@ -77,7 +77,6 @@ class View{
         }
 
         
-
         $this->render($this->name_view);
     }
 

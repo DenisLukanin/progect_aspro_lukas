@@ -2,7 +2,7 @@
 class Model{
 
     private static $table_exist = [];                // список таблиц которые были закешированы а значит точно есть
-    protected static $loader = [];                   // список закешированых записей где id => массив значений
+    // protected static $loader = [];                   // список закешированых записей где id => массив значений
     protected $table_elem_id;                        // id текущей модели 
     protected $db_object;                            // объект ДБ
     protected $table_name = "";                      // имя таблицы
@@ -34,9 +34,13 @@ class Model{
             
             $this->table_elem_id = $id; 
 
-            if (in_array($id, array_keys(static::$loader))) {               // проверка была ли закеширована запись
+            // if (in_array($id, array_keys(static::$loader))) {               // проверка была ли закеширована запись
                   
-                $this->properties = static::$loader[$id];                   // распаковыем значения из кеша в properties
+            //     $this->properties = static::$loader[$id];                   // распаковыем значения из кеша в properties
+
+            $prop = Cache::caching($id);
+            if ($prop) {  
+                $this->properties = $prop;  
 
             } else {
                 
@@ -86,17 +90,17 @@ class Model{
 
     }
 
-    function path_view_create(){
-        return "/catalog/create/";
+    static function path_view_create(){
+        return "catalog/create/";
     }
-    function path_view_update(){
-        return "/catalog/update/";
+    static function path_view_update(){
+        return "catalog/update/";
     }
-    function path_rest_create(){
-        return "/catalog/rest/create/";
+    static function path_rest_create(){
+        return "catalog/rest/product/create/";
     }
-    function path_rest_update(){
-        return "/catalog/rest/update/";
+    static function path_rest_update(){
+        return "catalog/rest/product/update/";
     }
 
 
@@ -116,7 +120,8 @@ class Model{
         if (!$result) return false;
         $result = $result->fetch(PDO::FETCH_ASSOC);
         if (!$result) return false;
-        static::$loader[$id] =  $result;                                     // кешируем если такой элемент есть в таблице
+        //static::$loader[$id] =  $result;                                     // кешируем если такой элемент есть в таблице
+        Cache::caching($id, $result);
         $this->set($result);                                                 // распаковываем значения в properties
         
         return true;
@@ -127,7 +132,7 @@ class Model{
         // echo __METHOD__."<br>";
         if ($this->table_elem_id) {
             $this->update();
-            echo "up<br>";
+            // echo "up<br>";
         }else{
             $this->create();
         };
@@ -137,16 +142,20 @@ class Model{
     protected function create(){
         // echo __METHOD__."<br>";
         $result = $this->db_object->insert($this->table_name, $this->properties);       // создается запись в таблице
-        static::$loader[$result] = $this->properties;                                   // кешируются значения таблиц
+        //static::$loader[$result] = $this->properties;                                   // кешируются значения таблиц
+        
         $this->table_elem_id = $result;                                                 // моделе присваивается id под которой она находится в таблице
+        // Cache::caching($result, $this->properties);
     }
 
 
     // изменить существующую
     protected function update(){
         // echo __METHOD__."<br>";
+        Cache::delete_cache($this->table_elem_id);
         $this->db_object->update($this->table_name, $this->table_elem_id, $this->properties_new);           // обновляется запись
-        static::$loader[$this->table_elem_id] = $this->properties;                                          // изменения фиксируются в кеше
+        //static::$loader[$this->table_elem_id] = $this->properties;                                          // изменения фиксируются в кеше
+        // Cache::caching($this->table_elem_id, $this->properties);
         $this->properties_new = [];                                                                         // обнуляется массив с изменениями
         
     }
@@ -236,7 +245,8 @@ class Model{
         if($sql_result){
             $this->table_elem_id = $sql_result["id"];
             $this->set($sql_result);
-            static::$loader[$this->table_elem_id] = $sql_result;
+            // static::$loader[$this->table_elem_id] = $sql_result;
+            Cache::caching($this->table_elem_id, $sql_result);
         }
         return $this;
     }
@@ -275,14 +285,15 @@ class Model{
 
     // удаление записи
     function delete($id){
-        if(in_array($id , array_keys(static::$loader))){
-            if($this->db_object->delete($this->table_name,$id)){
-                unset(static::$loader["$id"]);
-                return true;
-            };
-        } else {
+        Cache::delete_cache($id);
+        // if(in_array($id , array_keys(static::$loader))){
+        //     if($this->db_object->delete($this->table_name,$id)){
+        //         unset(static::$loader["$id"]);
+        //         return true;
+        //     };
+        // } else {
             return $this->db_object->delete($this->table_name,$id);
-        }
+        // }
 
     }
 

@@ -7,7 +7,7 @@ class Component {
 
     static function factory($name, array $target = []) {
         $component_namespace = "Component\\".ucfirst($name)."\\Main";
-        echo "ok";
+        // echo "ok";
 
         return new $component_namespace($target);
     }
@@ -33,7 +33,7 @@ class Component {
         extract($this->target);
         $model_product = Model::factory($model, $module);
         return $model_product->get_form_fields();               // Возвращает поля таблиы которые можно заполнить в форме
-        // aa($form_field);
+        
     }
 
 
